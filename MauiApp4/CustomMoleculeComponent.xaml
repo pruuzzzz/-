@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp4.CustomMoleculeComponent">
+
+    <!-- AbsoluteLayout을 XAML에서 정의하고 x:Name을 붙임 -->
+    <AbsoluteLayout x:Name="MoleculeLayout" Padding="10">
+        <!-- 사각형 박스 -->
+        <BoxView Color="lightgray" WidthRequest="300" HeightRequest="300" CornerRadius="20"
+             HorizontalOptions="End" VerticalOptions="Center" />
+    </AbsoluteLayout>
+
+</ContentView>
