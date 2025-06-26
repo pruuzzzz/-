@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiApp4.CustomMoleculeComponent">
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MauiApp4.CustomMoleculeComponent">
 
-    <!-- AbsoluteLayout을 XAML에서 정의하고 x:Name을 붙임 -->
-    <AbsoluteLayout x:Name="MoleculeLayout" Padding="10">
-        <!-- 사각형 박스 -->
-        <BoxView Color="lightgray" WidthRequest="300" HeightRequest="300" CornerRadius="20"
-             HorizontalOptions="End" VerticalOptions="Center" />
+    <!-- 1) 절대 위치 레이아웃만 남겨두고… -->
+    <AbsoluteLayout>
+
+
+        <Frame
+          x:Name="BoxFrame"
+          CornerRadius="0"    
+          Padding="0"
+          HasShadow="False"
+          BorderColor="Black"
+          BackgroundColor="LightGray"
+          WidthRequest="300"
+          HeightRequest="500"
+          HorizontalOptions="Center"
+          VerticalOptions="Center"
+          AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize,AutoSize"
+          AbsoluteLayout.LayoutFlags="PositionProportional">
+            <AbsoluteLayout
+          x:Name="MoleculeContainer"
+          Padding="0" />
+        </Frame>
+
     </AbsoluteLayout>
-
 </ContentView>

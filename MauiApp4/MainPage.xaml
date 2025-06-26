@@ -13,14 +13,38 @@
             Spacing="10">
 
 
-            <Label Text="온도 조절" 
+                <HorizontalStackLayout Spacing="20" Padding="10">
+
+                  <VerticalStackLayout Spacing="5">
+                      <CheckBox x:Name="Chk1" CheckedChanged="OnCheckBoxChanged"/>
+                      <Label Text="등압 과정" HorizontalOptions="Center"/>
+                  </VerticalStackLayout>
+
+                  <VerticalStackLayout Spacing="5">
+                      <CheckBox x:Name="Chk2" CheckedChanged="OnCheckBoxChanged"/>
+                      <Label Text="등적 과정" HorizontalOptions="Center"/>
+                  </VerticalStackLayout>
+
+                  <VerticalStackLayout Spacing="5">
+                      <CheckBox x:Name="Chk3" CheckedChanged="OnCheckBoxChanged"/>
+                      <Label Text="등온 과정" HorizontalOptions="Center"/>
+                  </VerticalStackLayout>
+
+                  <VerticalStackLayout Spacing="5">
+                      <CheckBox x:Name="Chk4" CheckedChanged="OnCheckBoxChanged"/>
+                      <Label Text="단열 과정" HorizontalOptions="Center"/>
+                  </VerticalStackLayout>
+
+                </HorizontalStackLayout>
+
+             <Label Text="온도 조절" 
                    FontSize="24"
                    HorizontalOptions="Start" />
 
                
             <Slider x:Name="TemperatureSlider"
                    Minimum="100"
-                   Maximum="1000"
+                   Maximum="600"
                    Value="300"
                    WidthRequest="200"
                    HorizontalOptions="Start"
@@ -80,29 +104,7 @@
                    Text="입력한 숫자: ?"
                    FontSize="18"
                    HorizontalOptions="Start" />
-            <HorizontalStackLayout Spacing="20" Padding="10">
-
-               <VerticalStackLayout Spacing="5">
-                    <CheckBox x:Name="Chk1" CheckedChanged="OnCheckBoxChanged"/>
-                    <Label Text="등적 과정" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-
-               <VerticalStackLayout Spacing="5">
-                    <CheckBox x:Name="Chk2" CheckedChanged="OnCheckBoxChanged"/>
-                    <Label Text="등온 과정" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-
-               <VerticalStackLayout Spacing="5">
-                    <CheckBox x:Name="Chk3" CheckedChanged="OnCheckBoxChanged"/>
-                    <Label Text="등압 과정" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-
-               <VerticalStackLayout Spacing="5">
-                    <CheckBox x:Name="Chk4" CheckedChanged="OnCheckBoxChanged"/>
-                    <Label Text="단열 과정" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-
-           </HorizontalStackLayout>
+       
 
        </VerticalStackLayout>
     </ScrollView>
