@@ -3,111 +3,96 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MauiApp4"
              x:Class="MauiApp4.MainPage">
-
     <HorizontalStackLayout>
-        
-    
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="10">
 
+        <ScrollView Grid.Column="0">
+            <VerticalStackLayout Padding="30,0" Spacing="10">
 
                 <HorizontalStackLayout Spacing="20" Padding="10">
-
-                  <VerticalStackLayout Spacing="5">
-                      <CheckBox x:Name="Chk1" CheckedChanged="OnCheckBoxChanged"/>
-                      <Label Text="등압 과정" HorizontalOptions="Center"/>
-                  </VerticalStackLayout>
-
-                  <VerticalStackLayout Spacing="5">
-                      <CheckBox x:Name="Chk2" CheckedChanged="OnCheckBoxChanged"/>
-                      <Label Text="등적 과정" HorizontalOptions="Center"/>
-                  </VerticalStackLayout>
-
-                  <VerticalStackLayout Spacing="5">
-                      <CheckBox x:Name="Chk3" CheckedChanged="OnCheckBoxChanged"/>
-                      <Label Text="등온 과정" HorizontalOptions="Center"/>
-                  </VerticalStackLayout>
-
-                  <VerticalStackLayout Spacing="5">
-                      <CheckBox x:Name="Chk4" CheckedChanged="OnCheckBoxChanged"/>
-                      <Label Text="단열 과정" HorizontalOptions="Center"/>
-                  </VerticalStackLayout>
-
+                    <VerticalStackLayout Spacing="5">
+                        <CheckBox x:Name="Chk1" CheckedChanged="OnCheckBoxChanged"/>
+                        <Label Text="등압 과정" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="5">
+                        <CheckBox x:Name="Chk2" CheckedChanged="OnCheckBoxChanged"/>
+                        <Label Text="등적 과정" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="5">
+                        <CheckBox x:Name="Chk3" CheckedChanged="OnCheckBoxChanged"/>
+                        <Label Text="등온 과정" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="5">
+                        <CheckBox x:Name="Chk4" CheckedChanged="OnCheckBoxChanged"/>
+                        <Label Text="단열 과정" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
                 </HorizontalStackLayout>
 
-             <Label Text="온도 조절" 
-                   FontSize="24"
-                   HorizontalOptions="Start" />
+                <Label Text="온도 조절" FontSize="24" HorizontalOptions="Start" />
+                <Slider x:Name="TemperatureSlider" Minimum="100" Maximum="500" Value="300"
+                        WidthRequest="200" HorizontalOptions="Start" ValueChanged="OnTemperatureChanged"/>
+                <Label x:Name="TemperatureLabel" Text="현재 온도: 300 K" FontSize="18" HorizontalOptions="Start" />
 
-               
-            <Slider x:Name="TemperatureSlider"
-                   Minimum="100"
-                   Maximum="600"
-                   Value="300"
-                   WidthRequest="200"
-                   HorizontalOptions="Start"
-                   ValueChanged="OnTemperatureChanged"/>
+                <Label Text="부피 조절" FontSize="24" HorizontalOptions="Start" />
+                <Slider x:Name="ValueSlider" Minimum="10" Maximum="100" Value="30"
+                        WidthRequest="200" HorizontalOptions="Start" ValueChanged="OnValueChanged"/>
+                <Label x:Name="ValueLabel" Text="현재 부피: 30 m^3" FontSize="18" HorizontalOptions="Start" />
 
-            <Label x:Name="TemperatureLabel"
-                   Text="현재 온도: 300 K"
-                   FontSize="18"
-                   HorizontalOptions="Start" />
+                <Label Text="압력 조절" FontSize="24" HorizontalOptions="Start" />
+                <Slider x:Name="PressureSlider" Minimum="500" Maximum="5000" Value="1000"
+                        WidthRequest="200" HorizontalOptions="Start" ValueChanged="OnPressureChanged"/>
+                <Label x:Name="PressureLabel" Text="현재 압력: 1000 hpa" FontSize="18" HorizontalOptions="Start" />
 
-            <Label Text="부피 조절" 
-                   FontSize="24"
-                   HorizontalOptions="Start" />
+                <Entry x:Name="MyInputEntry" Placeholder="숫자를 입력하세요" Keyboard="Numeric"
+                       WidthRequest="200" HorizontalOptions="Start" TextChanged="OnEntryTextChanged"/>
+                <Label x:Name="MyResultLabel" Text="입력한 숫자: ?" FontSize="18" HorizontalOptions="Start" />
 
+            </VerticalStackLayout>
+        </ScrollView>
 
-            <Slider x:Name="ValueSlider"
-                   Minimum="100"
-                   Maximum="1000"
-                   Value="300"
-                   WidthRequest="200"
-                   HorizontalOptions="Start"
-                   ValueChanged="OnValueChanged" />
+        <local:CustomMoleculeComponent WidthRequest="300" HeightRequest="500"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
 
-            <Label x:Name="ValueLabel"
-                   Text="현재 부피: 300 m^3"
-                   FontSize="18"
-                   HorizontalOptions="Start" />
-                
-            <Label Text="압력 조절" 
-                   FontSize="24"
-                   HorizontalOptions="Start" />
- 
+        <VerticalStackLayout Grid.Column="1" Padding="20" Spacing="20"
+                             VerticalOptions="Start" HorizontalOptions="Start">
+            <Grid Padding="10"
+                  BackgroundColor="#eeeeee"
+                  WidthRequest="250"
+                  HeightRequest="200"
+                  RowSpacing="1"
+                  ColumnSpacing="1">
 
-            <Slider x:Name="PressureSlider"
-                   Minimum="100"
-                   Maximum="1000"
-                   Value="300"
-                   WidthRequest="200"
-                   HorizontalOptions="Start"
-                   ValueChanged="OnPressureChanged" />
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <Label x:Name="PressureLabel"
-                   Text="현재 압력: 300 hpa"
-                   FontSize="18"
-                   HorizontalOptions="Start" />
-                
+                <Frame Grid.Row="0" Grid.Column="0" BorderColor="Gray" Padding="10" HasShadow="False" BackgroundColor="White">
+                    <Label Text="압력" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Frame>
+                <Frame Grid.Row="0" Grid.Column="1" BorderColor="Gray" Padding="10" HasShadow="False" BackgroundColor="White">
+                    <Label x:Name="PressureLabelGrid" Text="---" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Frame>
 
+                <Frame Grid.Row="1" Grid.Column="0" BorderColor="Gray" Padding="10" HasShadow="False" BackgroundColor="White">
+                    <Label Text="온도" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Frame>
+                <Frame Grid.Row="1" Grid.Column="1" BorderColor="Gray" Padding="10" HasShadow="False" BackgroundColor="White">
+                    <Label x:Name="TemperatureLabelGrid" Text="---" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Frame>
 
-            <Entry x:Name="MyInputEntry"
-                   Placeholder="숫자를 입력하세요"
-                   Keyboard="Numeric"
-                   WidthRequest="200"
-                   HorizontalOptions="Start"
-                   TextChanged="OnEntryTextChanged" />
+                <Frame Grid.Row="2" Grid.Column="0" BorderColor="Gray" Padding="10" HasShadow="False" BackgroundColor="White">
+                    <Label Text="부피" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Frame>
+                <Frame Grid.Row="2" Grid.Column="1" BorderColor="Gray" Padding="10" HasShadow="False" BackgroundColor="White">
+                    <Label x:Name="VolumeLabelGrid" Text="---" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Frame>
+            </Grid>
+        </VerticalStackLayout>
 
-            <Label x:Name="MyResultLabel"
-                   Text="입력한 숫자: ?"
-                   FontSize="18"
-                   HorizontalOptions="Start" />
-       
-
-       </VerticalStackLayout>
-    </ScrollView>
-        <local:CustomMoleculeComponent HorizontalOptions="End" VerticalOptions="Center" />
     </HorizontalStackLayout>
 </ContentPage>

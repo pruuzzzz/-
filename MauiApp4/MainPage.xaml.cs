@@ -2,68 +2,158 @@
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        public static class SharedData
+        {
+            public static int T = 300;
+            public static int V = 30;
+            public static int P = 1000;
+            public static int Q = 0;
+        }
+
+        private double adiabaticInitialT;
+        private double adiabaticInitialV;
+        private double adiabaticInitialP;
+        private bool adiabaticInitialized = false;
 
         public MainPage()
         {
             InitializeComponent();
         }
 
-        
         private void OnTemperatureChanged(object sender, ValueChangedEventArgs e)
         {
-            int temp = (int)e.NewValue;
-            TemperatureLabel.Text = $"현재 온도: {temp} K";
-
-            // 여기서 추가로 물리 계산이나 시뮬레이션에 반영해도 됨
-            // 예: UpdateParticleSpeed(temp);
+            int T = (int)e.NewValue;
+            TemperatureLabel.Text = $"현재 온도: {T} K";
+            SharedData.T = T;
+            UpdateThermodynamicDisplay();
         }
+
         private void OnValueChanged(object sender, ValueChangedEventArgs e)
         {
-            int val = (int)e.NewValue;
-            ValueLabel.Text = $"현재 부피: {val} m^3";
-
-            // 여기서 추가로 물리 계산이나 시뮬레이션에 반영해도 됨
-            // 예: UpdateParticleSpeed(temp);
+            int V = (int)e.NewValue;
+            ValueLabel.Text = $"현재 부피: {V} m³";
+            SharedData.V = V;
+            UpdateThermodynamicDisplay();
         }
+
         private void OnPressureChanged(object sender, ValueChangedEventArgs e)
         {
-            int press = (int)e.NewValue;
-            PressureLabel.Text = $"현재 압력: {press} hpa";
-
-            // 여기서 추가로 물리 계산이나 시뮬레이션에 반영해도 됨
-            // 예: UpdateParticleSpeed(temp);
+            int P = (int)e.NewValue;
+            PressureLabel.Text = $"현재 압력: {P} hpa";
+            SharedData.P = P;
+            UpdateThermodynamicDisplay();
         }
-        private double n = 1.0; // 기본값
 
         private void OnEntryTextChanged(object sender, TextChangedEventArgs e)
         {
-            // 입력값을 int로 변환
-            if (int.TryParse(e.NewTextValue, out int result))
+            if (int.TryParse(e.NewTextValue, out int Q))
             {
-                MyResultLabel.Text = $"입력한 숫자: {result}";
+                MyResultLabel.Text = $"입력한 숫자: {Q}";
+                SharedData.Q = Q;
+                UpdateThermodynamicDisplay();
             }
             else
             {
                 MyResultLabel.Text = "정수를 입력하세요!";
             }
         }
+
         private void OnCheckBoxChanged(object sender, CheckedChangedEventArgs e)
         {
             if (sender is CheckBox selected && selected.IsChecked)
             {
-                // 모든 체크박스를 배열로 묶고
                 var checkBoxes = new[] { Chk1, Chk2, Chk3, Chk4 };
-
                 foreach (var cb in checkBoxes)
                 {
-                    // 선택된 체크박스만 제외하고 전부 false로
                     if (cb != selected)
                         cb.IsChecked = false;
                 }
             }
+            if (Chk4.IsChecked) // 단열 과정 체크 시 초기값 저장
+            {
+                adiabaticInitialT = SharedData.T;
+                adiabaticInitialV = SharedData.V;
+                adiabaticInitialP = SharedData.P;
+            }
+
+
+            UpdateThermodynamicDisplay();
         }
 
-    }
+        private void UpdateThermodynamicDisplay()
+        {
+          
+            if (Chk1.IsChecked)
+            {
+                double P = SharedData.P * 100;
+                double V = SharedData.V;
+                double T = SharedData.T;
+                double Q = SharedData.Q;
+                double N = P * V / T;
 
+                double x = ((N * T + 2 * Q / 3) - P * V) / (5 * P / 3);
+                double V_prime = V + x;
+                double T_prime = T + 2 * Q / (3 * N) - 2 * P * x / (3 * N);
+
+                VolumeLabelGrid.Text = $"{Math.Round(V_prime)} m³";
+                PressureLabelGrid.Text = $"{SharedData.P} hPa";
+                TemperatureLabelGrid.Text = $"{Math.Round(T_prime)} K";
+            }
+            else if (Chk2.IsChecked)
+            {
+                double P = SharedData.P * 100;
+                double V = SharedData.V;
+                double T = SharedData.T;
+                double Q = SharedData.Q;
+                double N = P * V / T;
+
+                double T_prime = T+2*Q/(3*N);
+                double P_prime = N*T_prime/V;
+
+                VolumeLabelGrid.Text = $"{Math.Round(V)} m³";
+                PressureLabelGrid.Text = $"{Math.Round(P_prime)} hPa";
+                TemperatureLabelGrid.Text = $"{Math.Round(T_prime)} K";
+            }
+            else if (Chk3.IsChecked) // 등온 과정
+            {
+                double P = SharedData.P * 100;
+                double V = SharedData.V;
+                double T = SharedData.T;
+                double Q = SharedData.Q;
+                double N = P * V / T;
+
+                double x = ((N * T + 2 * Q / 3) - P * V) / (5 * P / 3);
+                double V_prime = V + x;
+                double y = P-N*T/(V+x);
+                double P_prime = P-y;
+
+                VolumeLabelGrid.Text = $"{Math.Round(V_prime)} m³";
+                PressureLabelGrid.Text = $"{Math.Round(P_prime/100)} hPa";
+                TemperatureLabelGrid.Text = $"{Math.Round(T)} K";
+            }
+            else if (Chk4.IsChecked) // 단열 과정
+            {
+                double V = SharedData.V;
+                double T = SharedData.T;
+                double P = SharedData.P * 100;
+                double gamma = 5.0 / 3.0;
+
+                double V0 = adiabaticInitialV;
+                double T0 = adiabaticInitialT;
+                double P0 = adiabaticInitialP * 100;
+
+                double V_ratio = V / V0;
+
+                double T_prime = T0 * Math.Pow(V_ratio, 1 - gamma);
+                double P_prime = P0 * Math.Pow(V0 / V, gamma);
+
+                double x = V - V0;
+                double y = P0 - P_prime;
+
+                VolumeLabelGrid.Text = $"{Math.Round(V)} m³";
+                PressureLabelGrid.Text = $"{Math.Round(P_prime / 100)} hPa";
+                TemperatureLabelGrid.Text = $"{Math.Round(T_prime)} K";
+            }
+        }
+    }
 }
