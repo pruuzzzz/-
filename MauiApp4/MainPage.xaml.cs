@@ -8,7 +8,7 @@
             public static int V = 30;  // 부피 초기값
             public static int P = 1000; // 압력 초기값
             public static int Q = 0;  // 열량 초기값
-            public static double t = SharedData.T;  // t는 T와 동일 초기화
+            public static double A = SharedData.T;  // t는 T와 동일 초기화
         }
 
         private double adiabaticInitialT;
@@ -85,20 +85,18 @@
 
         private void UpdateThermodynamicDisplay()
         {
-            // 표에 표시된 값을 사용하여 속도 계산
-            double temperature = SharedData.T; // T 사용
+            double temperature = SharedData.T;
             double volume = SharedData.V;
             double pressure = SharedData.P;
 
             // 예시로 속도를 계산하는 방식: 온도에 비례한 속도 계산
-            double calculatedSpeedX = temperature / 100.0;  // 예시로 온도에 비례한 속도
-            double calculatedSpeedY = temperature / 200.0;  // 예시로 온도에 비례한 속도
+            double calculatedSpeedX = temperature / 100.0;
+            double calculatedSpeedY = temperature / 200.0;
 
             // 공에 계산된 속도를 전달
             MessagingCenter.Send(this, "UpdateSpeed", new { VX = calculatedSpeedX, VY = calculatedSpeedY });
 
-            // 나머지 계산은 그대로 진행
-            if (Chk1.IsChecked)
+            if (Chk1.IsChecked) // 등적 과정
             {
                 double P = SharedData.P * 100;
                 double V = SharedData.V;
@@ -110,20 +108,16 @@
                 double V_prime = V + x;
                 double T_prime = T + 2 * Q / (3 * N) - 2 * P * x / (3 * N);
 
-                // UI 갱신을 UI 스레드에서 실행
+                SharedData.A = T_prime;
+
                 Dispatcher.Dispatch(() =>
                 {
                     VolumeLabelGrid.Text = $"{Math.Round(V_prime)} m³";
                     PressureLabelGrid.Text = $"{SharedData.P} hPa";
                     TemperatureLabelGrid.Text = $"{Math.Round(T_prime)} K";
                 });
-
-                SharedData.t = T_prime;
-
-                // SharedData.t 값이 변경될 때마다 MessagingCenter로 전송
-                MessagingCenter.Send(this, "UpdateTemperature", SharedData.t); // 변경된 t 값을 CustomMoleculeComponent로 전달
             }
-            else if (Chk2.IsChecked)
+            else if (Chk2.IsChecked) // 등압 과정
             {
                 double P = SharedData.P * 100;
                 double V = SharedData.V;
@@ -134,18 +128,14 @@
                 double T_prime = T + 2 * Q / (3 * N);
                 double P_prime = N * T_prime / V;
 
-                // UI 갱신을 UI 스레드에서 실행
+                SharedData.A = T_prime;
+
                 Dispatcher.Dispatch(() =>
                 {
                     VolumeLabelGrid.Text = $"{Math.Round(V)} m³";
-                    PressureLabelGrid.Text = $"{Math.Round(P_prime)/100} hPa";
+                    PressureLabelGrid.Text = $"{Math.Round(P_prime / 100)} hPa";
                     TemperatureLabelGrid.Text = $"{Math.Round(T_prime)} K";
                 });
-
-                SharedData.t = T_prime;
-
-                // SharedData.t 값이 변경될 때마다 MessagingCenter로 전송
-                MessagingCenter.Send(this, "UpdateTemperature", SharedData.t); // 변경된 t 값을 CustomMoleculeComponent로 전달
             }
             else if (Chk3.IsChecked) // 등온 과정
             {
@@ -160,7 +150,8 @@
                 double y = P - N * T / (V + x);
                 double P_prime = P - y;
 
-                // UI 갱신을 UI 스레드에서 실행
+                SharedData.A = T;  // 등온: 온도 그대로 유지
+
                 Dispatcher.Dispatch(() =>
                 {
                     VolumeLabelGrid.Text = $"{Math.Round(V_prime)} m³";
@@ -184,22 +175,20 @@
                 double T_prime = T0 * Math.Pow(V_ratio, 1 - gamma);
                 double P_prime = P0 * Math.Pow(V0 / V, gamma);
 
-                double x = V - V0;
-                double y = P0 - P_prime;
+                SharedData.A = T_prime;
 
-                // UI 갱신을 UI 스레드에서 실행
                 Dispatcher.Dispatch(() =>
                 {
                     VolumeLabelGrid.Text = $"{Math.Round(V)} m³";
                     PressureLabelGrid.Text = $"{Math.Round(P_prime / 100)} hPa";
                     TemperatureLabelGrid.Text = $"{Math.Round(T_prime)} K";
                 });
-
-                SharedData.t = T_prime;
-
-                // SharedData.t 값이 변경될 때마다 MessagingCenter로 전송
-                MessagingCenter.Send(this, "UpdateTemperature", SharedData.t); // 변경된 t 값을 CustomMoleculeComponent로 전달
             }
+
+            // 계산된 A 값(최종 온도)을 CustomMoleculeComponent에 전달
+            MessagingCenter.Send(this, "UpdateTemperature", (int)Math.Round(SharedData.A));
         }
+
     }
 }
+
