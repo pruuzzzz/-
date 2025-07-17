@@ -138,7 +138,7 @@
                 Dispatcher.Dispatch(() =>
                 {
                     VolumeLabelGrid.Text = $"{Math.Round(V)} m³";
-                    PressureLabelGrid.Text = $"{Math.Round(P_prime)} hPa";
+                    PressureLabelGrid.Text = $"{Math.Round(P_prime)/100} hPa";
                     TemperatureLabelGrid.Text = $"{Math.Round(T_prime)} K";
                 });
 
