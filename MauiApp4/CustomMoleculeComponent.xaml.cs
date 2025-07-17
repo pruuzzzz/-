@@ -5,7 +5,7 @@ namespace MauiApp4
         const int MoleculeCount = 10;
         const double MoleculeSize = 20;
         const double BoxWidth = 300;
-        const double BoxHeight = 500;
+        double BoxHeight = 500;
 
         class Molecule
         {
@@ -20,6 +20,7 @@ namespace MauiApp4
         Random rand = new Random();
 
         private int temperature = 100; // 기본 온도 (처음에도 움직이게 하려면 필요)
+        private int volume = 500;
 
         public CustomMoleculeComponent()
         {
@@ -30,6 +31,11 @@ namespace MauiApp4
             {
                 temperature = t;
                 UpdateSpeedFromTemperature();
+            });
+            MessagingCenter.Subscribe<MainPage, int>(this, "UpdateVolume", (sender, v) =>
+            {
+                volume = v;
+                UpdateBoxSizeFromVolume();
             });
 
             // 공 초기화
@@ -73,6 +79,23 @@ namespace MauiApp4
             {
                 m.VX = speed * Math.Cos(m.Angle);
                 m.VY = speed * Math.Sin(m.Angle);
+            }
+        }
+        void UpdateBoxSizeFromVolume()
+        {
+            // 기준 부피 30에서 비례 확대/축소 (최소 크기 200x350 보장)
+            double scale = volume*10;
+
+            BoxHeight = scale;
+            BoxFrame.HeightRequest = BoxHeight;
+
+            // 기존 공들의 위치가 박스 안에 있도록 한 번 조정
+            foreach (var m in molecules)
+            {
+                var b = AbsoluteLayout.GetLayoutBounds(m.View);
+                double x = Math.Min(b.X, BoxWidth - MoleculeSize);
+                double y = Math.Min(b.Y, BoxHeight - MoleculeSize);
+                AbsoluteLayout.SetLayoutBounds(m.View, new Rect(x, y, MoleculeSize, MoleculeSize));
             }
         }
 

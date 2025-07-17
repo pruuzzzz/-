@@ -8,7 +8,8 @@
             public static int V = 30;  // 부피 초기값
             public static int P = 1000; // 압력 초기값
             public static int Q = 0;  // 열량 초기값
-            public static double A = SharedData.T;  // t는 T와 동일 초기화
+            public static double A = SharedData.T;
+            public static double B = SharedData.V;
         }
 
         private double adiabaticInitialT;
@@ -89,12 +90,6 @@
             double volume = SharedData.V;
             double pressure = SharedData.P;
 
-            // 예시로 속도를 계산하는 방식: 온도에 비례한 속도 계산
-            double calculatedSpeedX = temperature / 100.0;
-            double calculatedSpeedY = temperature / 200.0;
-
-            // 공에 계산된 속도를 전달
-            MessagingCenter.Send(this, "UpdateSpeed", new { VX = calculatedSpeedX, VY = calculatedSpeedY });
 
             if (Chk1.IsChecked) // 등적 과정
             {
@@ -109,6 +104,7 @@
                 double T_prime = T + 2 * Q / (3 * N) - 2 * P * x / (3 * N);
 
                 SharedData.A = T_prime;
+                SharedData.B = V_prime;
 
                 Dispatcher.Dispatch(() =>
                 {
@@ -151,6 +147,7 @@
                 double P_prime = P - y;
 
                 SharedData.A = T;  // 등온: 온도 그대로 유지
+                SharedData.B = V_prime;
 
                 Dispatcher.Dispatch(() =>
                 {
@@ -176,6 +173,7 @@
                 double P_prime = P0 * Math.Pow(V0 / V, gamma);
 
                 SharedData.A = T_prime;
+                SharedData.B = V;
 
                 Dispatcher.Dispatch(() =>
                 {
@@ -187,6 +185,7 @@
 
             // 계산된 A 값(최종 온도)을 CustomMoleculeComponent에 전달
             MessagingCenter.Send(this, "UpdateTemperature", (int)Math.Round(SharedData.A));
+            MessagingCenter.Send(this, "UpdateVolume", (int)Math.Round(SharedData.B));
         }
 
     }
